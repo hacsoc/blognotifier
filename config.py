@@ -4,4 +4,5 @@ FEEDS = [
     'http://fixedpoint.xyz/feed.xml',
     'https://bentley.link/index.xml',
     'http://aghassi.github.io/feed.xml',
+    'http://bettaieb.com/?feed=rss'
 ]
