@@ -12,3 +12,6 @@ are cool, but you can check them on your own.
 If you'd like your blog to be added to the notification list, add your feed URL
 into the list in `config.py`, and submit a pull request!  We'll only accept pull
 requests from the owner of the blog being added!
+
+**NOTE:** If you're on here, you should also think about adding yourself to the
+blog directory on the HacSoc [wiki](https://github.com/hacsoc/wiki).
