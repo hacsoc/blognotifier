@@ -10,6 +10,17 @@ from private import WEBHOOK
 from config import FEEDS
 
 
+def notify_article(hook_url, title, site, link):
+    message = '<!channel>: *{title}* @ {site}\n'\
+              '<{link}>'.format(title=title, site=site, link=link)
+    # We can make our message more pretty by adding JSON keys.
+    json_obj = {'text': message, 'username': 'Blog Notifier',
+                'icon_emoji': ':swift:'}
+    # We should say that we're using JSON.
+    headers = {'Content-type': 'application/json'}
+    requests.post(hook_url, data=json.dumps(json_obj), headers=headers)
+
+
 class BlogNotifier(object):
     """Blog notifier POSTS to Slack webhook when a feed is updated."""
 
@@ -30,19 +41,8 @@ class BlogNotifier(object):
 
             new_latest = feed.entries[0].published_parsed
             if new_latest > latest:
-                # Record the new latest publication date.
-                self._latests[i] = new_latest
-                # This is roughly Slack formatting.  Should be good enough.
-                message = '<!channel>: *{title}* @ {site}\n'\
-                          '<{link}>'.format(site=feed.feed.title,
-                                            **feed.entries[0])
-                # We can make our message more pretty by adding JSON keys.
-                json_obj = {'text': message, 'username': 'Blog Notifier',
-                            'icon_emoji': ':swift:'}
-                # We should say that we're using JSON.
-                headers = {'Content-type': 'application/json'}
-                requests.post(self._hook_url, data=json.dumps(json_obj),
-                              headers=headers)
+                notify_article(self._hook_url, feed.entries[0].title,
+                               feed.feed.title, feed.entries[0].link)
 
     def run_forever(self, delay):
         """Does what it sounds like.... runs forever."""
