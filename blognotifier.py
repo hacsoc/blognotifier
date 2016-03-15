@@ -23,6 +23,11 @@ class BlogNotifier(object):
         """Run periodically to check for updates and POST them to Slack."""
         for i, (url, latest) in enumerate(zip(self._urls, self._latests)):
             feed = feedparser.parse(url)
+
+            # Skip feeds that are empty.
+            if len(feed.entries) <= 0:
+                continue
+
             new_latest = feed.entries[0].published_parsed
             if new_latest > latest:
                 # Record the new latest publication date.
@@ -42,8 +47,10 @@ class BlogNotifier(object):
     def run_forever(self, delay):
         """Does what it sounds like.... runs forever."""
         while True:
-            time.sleep(delay)
+            # Update first so we know whether or not the update code is working
+            # :)
             self.update()
+            time.sleep(delay)
 
 
 if __name__ == '__main__':
