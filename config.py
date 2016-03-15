@@ -2,4 +2,5 @@
 FEEDS = [
     'http://brennan.io/blog/rss.xml',
     'http://fixedpoint.xyz/feed.xml',
+    'https://bentley.link/index.xml',
 ]
