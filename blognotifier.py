@@ -41,6 +41,8 @@ class BlogNotifier(object):
 
             new_latest = feed.entries[0].published_parsed
             if new_latest > latest:
+                # Don't repeatedly notify ;)
+                self._latests[i] = new_latest
                 notify_article(self._hook_url, feed.entries[0].title,
                                feed.feed.title, feed.entries[0].link)
 
