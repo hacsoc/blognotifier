@@ -4,5 +4,7 @@ FEEDS = [
     'http://fixedpoint.xyz/feed.xml',
     'https://bentley.link/index.xml',
     'http://aghassi.github.io/feed.xml',
-    'http://bettaieb.com/?feed=rss'
+    'http://bettaieb.com/?feed=rss',
+    'https://medium.com/feed/@KatherineCass',
 ]
+# Please leave the comma after the last item - it does no harm in Python!
