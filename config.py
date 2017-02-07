@@ -6,5 +6,6 @@ FEEDS = [
     'http://aghassi.github.io/feed.xml',
     'https://medium.com/feed/@KatherineCass',
     'http://mrbit.me/feed.xml',
+    'http://jkobyp.github.io/feed.xml',
 ]
 # Please leave the comma after the last item - it does no harm in Python!
