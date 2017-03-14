@@ -2,6 +2,7 @@
 
 import time
 import json
+import os.path
 
 import feedparser
 import requests
@@ -24,11 +25,17 @@ def notify_article(hook_url, title, site, link):
 class BlogNotifier(object):
     """Blog notifier POSTS to Slack webhook when a feed is updated."""
 
-    def __init__(self, feed_urls, hook_url):
+    def __init__(self, feed_urls, hook_url, statefile='state.json'):
         self._urls = feed_urls
-        feeds = [feedparser.parse(f) for f in feed_urls]
-        self._latests = [f.entries[0].published_parsed for f in feeds]
         self._hook_url = hook_url
+        self._statefile = statefile
+        if not os.path.isfile(statefile):
+            feeds = [feedparser.parse(f) for f in feed_urls]
+            self._latests = [f.entries[0].published_parsed for f in feeds]
+            self.write_state()
+        else:
+            self.read_state()
+            self.update()
 
     def update(self):
         """Run periodically to check for updates and POST them to Slack."""
@@ -45,6 +52,23 @@ class BlogNotifier(object):
                 self._latests[i] = new_latest
                 notify_article(self._hook_url, feed.entries[0].title,
                                feed.feed.title, feed.entries[0].link)
+        self.write_state()
+
+    def write_state(self):
+        d = {url: latest for url, latest in zip(self._urls, self._latests)}
+        with open(self._statefile, 'w') as f:
+            json.dump(d, f)
+
+    def read_state(self):
+        with open(self._statefile, 'r') as f:
+            d = json.load(f)
+        self._latests = []
+        for url in self._urls:
+            if url in d:
+                self._latests.append(time.struct_time(d[url]))
+            else:
+                # feedparser uses UTC/GMT for all times
+                self._latests.append(time.gmtime())
 
     def run_forever(self, delay):
         """Does what it sounds like.... runs forever."""
